@@ -20,7 +20,6 @@ cfg_if::cfg_if! {
     if #[cfg(all(
             target_os = "windows",
             target_env = "msvc",
-            target_pointer_width = "64"
             ))] {
         extern "C" {
             pub fn __chkstk();
