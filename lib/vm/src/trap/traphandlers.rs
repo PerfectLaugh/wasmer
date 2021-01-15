@@ -326,8 +326,14 @@ cfg_if::cfg_if! {
                     Some(info) => info,
                     None => return EXCEPTION_CONTINUE_SEARCH,
                 };
+
+                #[cfg(target_arch = "x86_64")]
+                let jmp_ptr = (*(*exception_info).ContextRecord).Rip as *const u8;
+                #[cfg(target_arch = "x86")]
+                let jmp_ptr = (*(*exception_info).ContextRecord).Eip as *const u8;
+
                 let jmp_buf = info.handle_trap(
-                    (*(*exception_info).ContextRecord).Rip as *const u8,
+                    jmp_ptr,
                     record.ExceptionCode == EXCEPTION_STACK_OVERFLOW,
                     // TODO: fix the signal trap associated to memory access in Windows
                     None,
